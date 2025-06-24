@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include <SDL2/SDL.h>
 // represents blocks of memory, will probably be useful when vusalizing memory later
 struct mem_Block{
     size_t size;
@@ -13,17 +13,7 @@ class mem_allocator{
     // making a linked list to keep track of what blocks of memory are free just to manage the buffer well
     mem_Block block_0 = {0,nullptr} ;
     public:
-    size_t get_address(){
-        // std::cout << (size_t)&buffer;
-        return (size_t)&buffer;
-    }
-    void get_free(){
-        mem_Block *indexer = &block_0;
-        while(indexer){
-            std::cout << indexer->isfree << '\n';
-            indexer = indexer->next;
-        }
-    }
+    
     void* my_malloc(size_t size){
         // initialize block to be added to the linked list
         mem_Block *block = new  mem_Block{0,nullptr} ;
@@ -67,10 +57,5 @@ class mem_allocator{
 int main(){
     // debugging
     mem_allocator m1;
-    int *ptr = (int*)m1.my_malloc(sizeof(int));
-    *ptr = 6;
-    int *ptr2 = (int*)m1.my_malloc(sizeof(int));
-    m1.my_free(ptr2);
-    m1.get_free();
     return 0;
 }
