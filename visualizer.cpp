@@ -1,4 +1,5 @@
 #include <iostream>
+
 // represents blocks of memory, will probably be useful when vusalizing memory later
 struct mem_Block{
     size_t size;
@@ -16,10 +17,17 @@ class mem_allocator{
         // std::cout << (size_t)&buffer;
         return (size_t)&buffer;
     }
+    void get_free(){
+        mem_Block *indexer = &block_0;
+        while(indexer){
+            std::cout << indexer->isfree << '\n';
+            indexer = indexer->next;
+        }
+    }
     void* my_malloc(size_t size){
         // initialize block to be added to the linked list
-        mem_Block block = {0,nullptr} ;
-        size_t used_mem;
+        mem_Block *block = new  mem_Block{0,nullptr} ;
+        size_t used_mem = 0;
         mem_Block *indexer = &block_0 ;
             while (indexer)
             {
@@ -28,7 +36,7 @@ class mem_allocator{
                 {
                     indexer->size = indexer->size > 0 ? indexer->size : size ;
                     if(indexer->size >= size ) break;
-                    indexer->next = &block;
+                    indexer->next = block;
                     indexer->isfree = false;
                     break;
                 }
@@ -38,7 +46,8 @@ class mem_allocator{
         void *ptr = (void*)((size_t)&buffer + used_mem) ;
         return ptr;
     }
-    void my_free(void* &ptr){
+    template<typename T>
+    void my_free(T *&ptr){
         // difference between the beginning address of the buffer and the user pointer
         unsigned int difference = (size_t)ptr - (size_t)&buffer;
         unsigned int used_mem = 0;
@@ -46,7 +55,7 @@ class mem_allocator{
         // go through the linked list until the sum of all used memories is equal to the difference calculated previously
 
         while( difference > used_mem ){
-            used_mem = indexer->size;
+            used_mem += indexer->size;
             indexer = indexer->next;
         }
 
@@ -61,7 +70,7 @@ int main(){
     int *ptr = (int*)m1.my_malloc(sizeof(int));
     *ptr = 6;
     int *ptr2 = (int*)m1.my_malloc(sizeof(int));
-    // m1.get_address();
-    // std::cout << "\n address pointed at: " << ptr << " //// ptr2: " << ptr2 << "****difference between buffer and pointer addresses: " << (size_t)ptr2 - m1.get_address() ;
+    m1.my_free(ptr2);
+    m1.get_free();
     return 0;
 }
