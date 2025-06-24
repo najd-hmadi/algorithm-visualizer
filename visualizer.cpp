@@ -54,8 +54,14 @@ class mem_allocator{
     }
 };
 
-int main(){
-    // debugging
-    mem_allocator m1;
+int main(int argc, char* argv[]){
+    SDL_Window * window = SDL_CreateWindow("algo visualizer",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,1500,900,SDL_WINDOW_SHOWN);
+    SDL_Surface * surface = SDL_GetWindowSurface(window);
+    if( SDL_Init(SDL_INIT_VIDEO) < 0 ) std::cout << "video initialization error: " << SDL_GetError() << "\n";
+    if(!window) std::cout << "window initialization failed: " << SDL_GetError() << '\n';
+    SDL_UpdateWindowSurface(window);
+    SDL_Delay(2000);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
     return 0;
 }
